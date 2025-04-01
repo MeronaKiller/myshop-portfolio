@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.admin.AdminMapper">
+	<select id="getDae" resultType="com.example.demo.dto.DaeDto">
+		select * from dae order by code asc
+	</select>
+	<select id="getJung" resultType="com.example.demo.dto.JungDto">
+		select * from jung where daecode=#{dae} order by code asc
+	</select>
+	<select id="getSo" resultType="com.example.demo.dto.SoDto">
+		select * from so where daejung=#{daejung} order by code asc
+	</select>
+	<select id="getCompany" resultType="com.example.demo.dto.CompanyDto">
+		select * from company order by code asc
+	</select>
+	<select id="getNumber" resultType="Integer"><!-- 만약 null이면 0으로 바꾼다 -->
+		select ifnull(max(right(pcode,3)),0)+1
+		from product where pcode like concat(#{pcode},'%')
+	</select>
+	
+	<insert id="proWriteOk" parameterType="com.example.demo.dto.ProductDto">
+		insert into product(pcode,pimg,dimg,title,price,halin,su,baeprice,baeday,juk,writeday)
+		values(#{pcode},#{pimg},#{dimg},#{title},#{price},
+		#{halin},#{su},#{baeprice},#{baeday},#{juk},now())
+	</insert>
+	
+	<select id="panmaeList" resultType="HashMap">
+		SELECT
+		g.id, g.userid, g.state, p.title, p.pimg, b.juso
+		FROM
+		product AS p
+		INNER JOIN
+		gumae AS g ON g.pcode=p.pcode
+		INNER JOIN
+		baesong AS b ON g.baeId=b.id
+		ORDER BY
+		jumuncode desc
+	</select>
+	
+	<update id="chgState" parameterType="com.example.demo.dto.GumaeDto">
+		UPDATE gumae
+		SET state=#{state}
+		WHERE id=#{id}
+	</update>
+	
+	<select id="qnaList" resultType="com.example.demo.dto.QnaDto">
+	
+		SELECT * FROM qna ORDER BY id DESC
+	
+	</select>
+	
+	<insert id="qnaAnswer" parameterType="com.example.demo.dto.QnaDto">
+	
+		INSERT INTO qna (userid, content, ref, qna, writeday, pcode)
+		VALUES ('admin', #{content}, #{ref}, 2, now(), #{pcode})
+	
+	</insert>
+	
+	<update id="setRef">
+	
+		UPDATE qna SET ref=#{id}
+		WHERE id=#{id}
+	
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.product.ProductMapper">
+   <select id="productList" resultType="com.example.demo.dto.ProductDto">
+      select * from product
+      where
+      <if test="ck==0">
+      title like CONCAT('%',#{pcode},'%')
+      </if>
+      <if test="ck==1">
+      pcode like CONCAT(#{pcode},'%')
+      </if>
+      ORDER BY ${orderStr}
+      LIMIT #{index},20
+   </select>
+   
+   <select id="getChong" resultType="Integer">
+     select ceil( count(*)/20 )
+     from product
+     where
+    <if test="ck==0">
+     title like concat('%',#{pcode},'%')
+    </if>
+    <if test="ck==1">
+     pcode like concat(#{pcode},'%')
+    </if>
+   </select>
+   
+   <select id="getDae" resultType="String">
+     select name from dae
+     where code=#{code}
+   </select>
+   
+   <select id="getJung" resultType="String">
+     select name from jung
+     where daecode=#{dae} and code=#{jung}
+   </select>
+   
+   <select id="getSo" resultType="String">
+     select name from so
+     where daejung=#{daejung} and code=#{so}
+   </select>
+   
+   <select id="productContent" resultType="com.example.demo.dto.ProductDto">
+   	select * from product where pcode=#{pcode}
+   </select>
+   
+   <insert id="jjimOk">
+   	insert into jjim(userid,pcode,writeday)
+   	values(#{userid},#{pcode},now())
+   </insert>
+   
+   <select id="isJjim" resultType="Integer">
+   	select count(*) from jjim
+   	where userid=#{userid} and pcode=#{pcode}
+   </select>
+   
+   <select id="jjimDel">
+   	delete from jjim where userid=#{userid} and pcode=#{pcode}
+   </select>
+   
+   <insert id="addCart" parameterType="com.example.demo.dto.CartDto">
+   	insert into cart(userid,pcode,su,writeday)
+   	values(#{userid},#{pcode},#{su},now())
+   </insert>
+   
+   <select id="isCart" resultType="Boolean">
+   	select count(*) from cart
+   	where userid=#{userid} and pcode=#{pcode}
+   </select>
+   
+  
+   <update id="upCart"  parameterType="com.example.demo.dto.CartDto">
+     update cart
+     set su=su+#{su} 
+     where pcode=#{pcode} and userid=#{userid}
+   </update>
+   
+   <select id="getMember" resultType="com.example.demo.member.MemberDto">
+   	select * from member
+   	where userid=#{userid}
+   </select>
+   
+   <select id="getBaesong" resultType="com.example.demo.dto.BaesongDto">
+   	select * from baesong
+   	where userid=#{userid} and gibon=1
+   </select>
+   
+   <insert id="baesongWriteOk" parameterType="com.example.demo.dto.BaesongDto">
+     insert into baesong(userid,zip,juso,jusoEtc,phone,name,gibon,req)
+     values(#{userid},#{zip},#{juso},#{jusoEtc},#{phone},#{name},#{gibon},#{req})
+   </insert>
+   
+   <select id="baesongList" resultType="com.example.demo.dto.BaesongDto">
+     select * from baesong
+     where userid=#{userid}
+     order by gibon desc
+   </select>
+   <update id="setZero">
+     update baesong
+     set gibon=0
+     where userid=#{userid}
+   </update>
+   <select id="isBaesong" resultType="Integer">
+     select count(*) from baesong
+     where userid=#{userid}
+   </select>
+   
+   <select id="getNumber" resultType="Integer">
+   	select ifnull(max(right(jumuncode,3)),0)+1
+  	from gumae
+   	where jumuncode like concat(#{jumuncode},'%')
+   </select>
+   
+   <insert id="gumaeOk" parameterType="com.example.demo.dto.GumaeDto">
+   	insert into gumae(userid,baeId,pcode,su,useJuk,sudan,card1,halbu1,bank1,card2,tel,bank2,jumuncode,writeday)
+      values(#{userid},#{baeId},#{pcode},#{su},#{useJuk},#{sudan},#{card1},#{halbu1},#{bank1},#{card2},#{tel},#{bank2},#{jumuncode},now())
+   </insert>
+   
+   <update id="setJuk">
+  	update member
+  	set juk=juk-${useJuk}
+  	where userid=#{userid}
+   </update>
+   
+  <delete id="cartDel">
+    delete from cart
+    where userid=#{userid} and pcode=#{pcode}
+  </delete>
+   
+  <delete id="baesongDelete">
+    delete from baesong
+    where id=#{id}
+  </delete>
+  
+  <select id="getBaesong2" resultType="com.example.demo.dto.BaesongDto">
+     select * from baesong
+     where id=#{id}
+   </select>
+  
+   <update id="baesongUpdateOk" parameterType="com.example.demo.dto.BaesongDto">
+     update baesong
+     set name=#{name} , zip=#{zip}, juso=#{juso},
+     jusoEtc=#{jusoEtc}, phone=#{phone},
+     req=#{req} , gibon=#{gibon}
+     where id=#{id}
+   </update>
+   
+   <select id="getGumae" resultType="com.example.demo.dto.GumaeDto">
+   	select * from gumae
+   	where jumuncode=#{jmuncode}
+   </select>
+   
+
+  
+  <select id="getReview" resultType="com.example.demo.dto.ReviewDto">
+  	
+  	SELECT *
+  	, RPAD(SUBSTRING(userid, 1, 2), CHAR_LENGTH(userid), '*') AS chUserid
+  	FROM review where pcode=#{pcode}
+  	ORDER BY star DESC
+  
+  </select>
+  
+    <insert id="qnaWriteOk" parameterType="com.example.demo.dto.QnaDto">
+  
+  	INSERT INTO qna(userid, content, ptitle, writeday, pcode)
+  	VALUES ( #{userid}, #{content}, #{ptitle}, now(), #{pcode} )
+  
+  </insert>
+  
+     <select id="getQna" resultType="com.example.demo.dto.QnaDto">
+   
+   	SELECT * FROM qna
+   	WHERE pcode=#{pcode}
+   	ORDER BY ref DESC, qna ASC
+   
+   </select>
+   
+   	<delete id="qnaDel1">
+	
+		DELETE FROM qna WHERE id=#{id}
+	
+	</delete>
+	
+	
+	<delete id="qnaDel2">
+	
+		DELETE FROM qna WHERE ref=#{ref}
+	
+	</delete>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
