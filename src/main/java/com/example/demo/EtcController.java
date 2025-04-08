@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.lang.annotation.Repeatable;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,17 @@ public class EtcController {
 		return "/etc/thisEx";
 	}
 	
+ 
+	@GetMapping("/etc/vo")
+	public String vo()
+	{
+		return "/etc/vo";
+	}
+	@GetMapping("/etc/chul")
+	public String chul()
+	{
+		return "/etc/chul";
+	}
 	@GetMapping("/etc/selectJung")
 	public String selectJung()
 	{
@@ -136,25 +148,125 @@ public class EtcController {
 		
 		return "/etc/star";
 	}
+	
+ 
+	@RequestMapping("/etc/id")
+	public String id()
+	{
+		return "/etc/id";
+	}
+	
 	@RequestMapping("/etc/chkbox")
 	public String chkbox()
 	{
 		return "/etc/chkbox";
 	}
-
+	@RequestMapping("/etc/comma")
+	public String comma()
+	{
+		return "/etc/comma";
+	}
+	
+	@RequestMapping("/etc/juso")
+	public String juso()
+	{
+		return "/etc/juso";
+	}
+	
+	@RequestMapping("/etc/juso2")
+	public String juso2()
+	{
+		return "/etc/juso2";
+	}
+	
+	@RequestMapping("/etc/google")
+	public String google()
+	{
+		return "/etc/google";
+	}
+	@RequestMapping("/etc/naverMap")
+	public String naverMap()
+	{
+		return "/etc/naverMap";
+	}
+	@RequestMapping("/etc/naverMap2")
+	public String naverMap2()
+	{
+		return "/etc/naverMap2";
+	}
+	@RequestMapping("/etc/form")
+	public String form()
+	{
+		return "/etc/form";
+	}
+	
+	@RequestMapping("/etc/form2")
+	public String form2()
+	{
+		return "/etc/form2";
+	}
+	
 	@RequestMapping("/etc/formOk")
 	public void formOk(HttpServletRequest request)
 	{
-		request.getParameterValues("pcode");
-		request.getParameterValues("su");
+		String[] pcodes=request.getParameterValues("pcode");
+		String[] sus=request.getParameterValues("su");
+		String[] subChks=request.getParameterValues("subChk");
+		
+		for(int i=0;i<subChks.length;i++)
+		{
+			int n=Integer.parseInt(subChks[i]);
+			System.out.println(pcodes[n]+" "+sus[n]);
+		}
+		
+		/*
+		for(int i=0;i<subChks.length;i++)
+		{
+			System.out.println(subChks[i]);
+		}
+		
+		for(int i=0;i<pcodes.length;i++)
+		{
+			System.out.println(pcodes[i]+" "+sus[i]);
+		}
+		*/
 	}
+	
+	@RequestMapping("/etc/movie")
+	public String movie()
+	{
+		return "/etc/movie";
+	}
+	@RequestMapping("/etc/weather")
+	public String weather()
+	{
+		return "/etc/weather";
+	}
+	@RequestMapping("/etc/load")
+	public String load()
+	{
+		return "/etc/load";
+	}
+	@RequestMapping("/etc/load2")
+	public String load2()
+	{
+		return "/etc/load2";
+	}
+	
+	
+	
 	@GetMapping("/etc/baesongOut")
-	public String baesongout()
+	public String baesongOut()
 	{
 		return "/etc/baesongOut";
 	}
+	
+	@GetMapping("/etc/exMain")
+	public String exMain()
+	{
+		return "/etc/exMain";		
+	}
 }
-
 
 
 

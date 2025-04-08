@@ -286,6 +286,10 @@
     	
     }
     
+    // default.jsp는 모든 페이지가 다 사용한다.
+    // 비동기방식으로 접근
+    
+    
     let recognition;
     
     window.onload=function()
@@ -323,10 +327,59 @@
     	    }
     	}
     }
+    function startRecord() {
+
+    	 console.log("음성 인식 시작");
+
+    	 // ⏺️ 클릭 시 음성 인식을 시작한다.
+    	 recognition.addEventListener("speechstart", () => {
+    	     console.log("음성 인식 시작");
+    	 });
+
+    	 // 음성 인식이 끝나면 종료된다.
+    	 recognition.addEventListener("speechend", () => {
+    	     console.log("음성 인식 종료");
+    	 });
+
+    	 // 음성 인식 결과를 반환
+    	recognition.addEventListener("result", (e) => {
+    	  // e.results가 존재하는지, 그리고 첫 번째 항목이 있는지 확인
+    	  alert(e.results);
+    	  alert(e.results[0]);
+    	  alert(e.results[0][0].transcript);
+    	  if (e.results && e.results[0] && e.results[0][0]) {
+    	    // 정상적으로 결과가 있다면 searchConsole에 값 할당
+    	    document.getElementById("sword").value =e.results[0][0].transcript
+    	    endRecord();
+    	  } else {
+    	    // 결과가 없다면 경고 메시지 또는 빈 문자열 설정
+    	    console.log("음성 인식 결과가 없습니다.");
+    	    searchConsole.value = ""; // 음성 인식 결과가 없을 경우 빈 문자열로 처리
+    	  }
+    	});
+
+
+    	 recognition.start();
+    	}
+
+    	// 🛑 클릭 시 종료
+    	function endRecord() {
+    	 console.log("음성 인식 종료");
+    	 recognition.stop(); // 음성 인식 중지
+    	}
+  
     
-    	
-    	
-    	
+    function getNum()
+    {
+    	var chk=new XMLHttpRequest();
+    	chk.onload=function()
+    	{
+    		document.getElementById("cartNum").innerText=chk.responseText;
+    	}
+    	chk.open("get","../getCartNum");
+    	chk.send();
+    }
+    
     function chgX(val) // name="sword"인 태그에 입력된 값
     {
     	if(val.length==0)
@@ -455,64 +508,14 @@
     		soMenu[i].style.visibility="hidden";
     	}	
     }
+    
     function viewMy()
     {
-    	document.getElementById("mySub").style.visibility="visible";
+     	document.getElementById("mySub").style.visibility="visible";
     }
     function hideMy()
     {
     	document.getElementById("mySub").style.visibility="hidden";
-    }
-    function startRecord() {
-
-   	 console.log("음성 인식 시작");
-
-   	 // ⏺️ 클릭 시 음성 인식을 시작한다.
-   	 recognition.addEventListener("speechstart", () => {
-   	     console.log("음성 인식 시작");
-   	 });
-
-   	 // 음성 인식이 끝나면 종료된다.
-   	 recognition.addEventListener("speechend", () => {
-   	     console.log("음성 인식 종료");
-   	 });
-
-   	 // 음성 인식 결과를 반환
-   	recognition.addEventListener("result", (e) => {
-   	  // e.results가 존재하는지, 그리고 첫 번째 항목이 있는지 확인
-   	  //alert(e.results);
-   	  //alert(e.results[0]);
-   	  //alert(e.results[0][0].transcript);
-   	  if (e.results && e.results[0] && e.results[0][0]) {
-   	    // 정상적으로 결과가 있다면 searchConsole에 값 할당
-   	    document.getElementById("sword").value =e.results[0][0].transcript
-   	    endRecord();
-   	  } else {
-   	    // 결과가 없다면 경고 메시지 또는 빈 문자열 설정
-   	    console.log("음성 인식 결과가 없습니다.");
-   	    searchConsole.value = ""; // 음성 인식 결과가 없을 경우 빈 문자열로 처리
-   	  }
-   	});
-
-
-   	 recognition.start();
-   	}
-
-   	// 🛑 클릭 시 종료
-   	function endRecord() {
-   	 console.log("음성 인식 종료");
-   	 recognition.stop(); // 음성 인식 중지
-   	}
-   	
-    function getNum()
-    {
-    	var chk=new XMLHttpRequest();
-    	chk.onload=function()
-    	{
-    		document.getElementById("cartNum").innerText=chk.responseText;
-    	}
-    	chk.open("get","../getCartNum");
-    	chk.send();
     }
     function search()
     {
@@ -523,6 +526,7 @@
   <sitemesh:write property="head"/>
 </head>
 <body> <!-- default.jsp -->
+
    <div id="fouter">
      <div id="first">
       <div id="left"> 회원가입하고 50%할인 쿠폰 드립니다 </div>
@@ -541,21 +545,21 @@
        </div>
      </div>
      <div id="memMenu">
-        <a href="../member/cartView"> 장바구니(<span id="cartNum">&nbsp;&nbsp;</span>) </a> | 
+        <a href="../member/cartView"> 장바구니 <span id="cartNum">&nbsp;&nbsp;</span> </a> | 
       <c:if test="${userid==null}">   
         <a href="../login/login"> 로그인 </a> |
         <a href="../member/member"> 회원가입 </a> |
       </c:if>
       <c:if test="${userid!=null}">  
-        <span id="myMain" onmouseover="viewMy()" onmouseout="hideMy()">${name}님 
-        	<ul id="mySub">
-        		<li><a href="../member/jjimList"> 찜리스트 </a></li>
-        		<li><a href="../member/memberInfo"> 회원정보 </a> </li>
-        		<li><a href="../member/jumunList"> 주문내역 </a></li>
-        		<li><a href="../member/baesongList"> 배송지정보 </a></li>
-        		<li><a href="../member/reviewList"> 상품평관리 </a></li>
-        		<li><a href="../member/qnaList"> 상품문의 </a></li>
-        	</ul>
+        <span id="myMain" onmouseover="viewMy()" onmouseout="hideMy()"> ${name}님
+          <ul id="mySub">
+            <li> <a href="../member/jjimList"> 찜리스트 </a></li>
+            <li> <a href="../member/memberInfo"> 회원정보 </a></li>
+            <li> <a href="../member/jumunList"> 주문내역 </a> </li>
+            <li> <a href="../member/baesongList"> 배송지정보 </a></li>
+            <li> <a href="../member/reviewList"> 상품평관리 </a> </li>
+            <li> <a href="../member/qnaList"> 상품문의 </a> </li>
+          </ul>        
         </span> |
         <a href="../login/logout"> 로그아웃 </a> |
       </c:if>  
