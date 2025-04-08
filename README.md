@@ -51,8 +51,8 @@
     </tr>
     <tr>
       <td>
-        <img src="docs/images/aaa3.png" width="100%" alt="장바구니"/>
-        <p align="center"><b>장바구니</b> - 실시간 수량 변경 및 금액 계산</p>
+        <img src="docs/images/aaa3.png" width="100%" alt="상품 상세"/>
+        <p align="center"><b>상품 상세(productContent)</b> - 상품 정보 및 구매 옵션</p>
       </td>
       <td>
         <img src="docs/images/aaa4.png" width="100%" alt="주문 완료"/>
@@ -214,67 +214,130 @@ src/main
 ### 🔄 ERD (Entity Relationship Diagram)
 
 <div align="center">
-  <pre>
-  +-----------+     +----------+     +----------+
-  |   member  |     |  product |     |  company |
-  +-----------+     +----------+     +----------+
-  | id (PK)   |     | id (PK)  |     | id (PK)  |
-  | userid    |     | pcode    |     | name     |
-  | pwd       |     | title    |     | code     |
-  | email     |     | price    |     +----------+
-  | name      |     | halin    |           |
-  | phone     |     | su       |           |
-  | state     |     | baeprice |           |
-  | juk       |     | star     |     +-----v---+
-  +-----------+     | company_ |     |   dae   |
-       |             | code     |     +---------+
-       |             +----------+     | id (PK) |
-       |                   |          | name    |
-       |                   |          | code    |
-       |                   |          +---------+
-       |                   |               |
-       v                   v               v
-  +-----------+     +-----------+     +---------+
-  |   cart    |     |   jjim    |     |  jung   |
-  +-----------+     +-----------+     +---------+
-  | id (PK)   |     | id (PK)   |     | id (PK) |
-  | userid    |     | pcode     |     | name    |
-  | pcode     |     | userid    |     | code    |
-  | su        |     | writeday  |     | daecode |
-  | writeday  |     +-----------+     +---------+
-  +-----------+                            |
-       |                                   v
-       |                              +---------+
-       |                              |   so    |
-       v                              +---------+
-  +-----------+                       | id (PK) |
-  |   gumae   |                       | name    |
-  +-----------+                       | code    |
-  | id (PK)   |                       | daejung |
-  | userid    |                       +---------+
-  | baeId     |
-  | pcode     |                       +---------+
-  | su        |                       | baesong |
-  | useJuk    |                       +---------+
-  | jumuncode |                       | id (PK) |
-  | state     |                       | zip     |
-  | writeday  |                       | juso    |
-  | sudan     |                       | phone   |
-  +-----------+                       | name    |
-       |                              | userid  |
-       v                              +---------+
-  +-----------+
-  |  review   |
-  +-----------+
-  | id (PK)   |
-  | userid    |
-  | pcode     |
-  | star      |
-  | title     |
-  | content   |
-  | writeday  |
-  +-----------+
-  </pre>
+  <table border="0">
+    <tr>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">member</th></tr>
+          <tr><td>id (PK)</td><td>회원 ID</td></tr>
+          <tr><td>userid</td><td>사용자 ID</td></tr>
+          <tr><td>pwd</td><td>비밀번호</td></tr>
+          <tr><td>email</td><td>이메일</td></tr>
+          <tr><td>name</td><td>이름</td></tr>
+          <tr><td>phone</td><td>연락처</td></tr>
+          <tr><td>state</td><td>상태</td></tr>
+          <tr><td>juk</td><td>적립금</td></tr>
+        </table>
+      </td>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">product</th></tr>
+          <tr><td>id (PK)</td><td>상품 ID</td></tr>
+          <tr><td>pcode</td><td>상품 코드</td></tr>
+          <tr><td>title</td><td>상품명</td></tr>
+          <tr><td>price</td><td>가격</td></tr>
+          <tr><td>halin</td><td>할인율</td></tr>
+          <tr><td>su</td><td>재고 수량</td></tr>
+          <tr><td>baeprice</td><td>배송비</td></tr>
+          <tr><td>star</td><td>평점</td></tr>
+          <tr><td>company_code</td><td>공급사 코드</td></tr>
+        </table>
+      </td>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">company</th></tr>
+          <tr><td>id (PK)</td><td>공급사 ID</td></tr>
+          <tr><td>name</td><td>공급사명</td></tr>
+          <tr><td>code</td><td>코드</td></tr>
+        </table>
+        <br>
+        <table border="1">
+          <tr><th colspan="2">dae</th></tr>
+          <tr><td>id (PK)</td><td>대분류 ID</td></tr>
+          <tr><td>name</td><td>대분류명</td></tr>
+          <tr><td>code</td><td>코드</td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">cart</th></tr>
+          <tr><td>id (PK)</td><td>장바구니 ID</td></tr>
+          <tr><td>userid</td><td>사용자 ID</td></tr>
+          <tr><td>pcode</td><td>상품 코드</td></tr>
+          <tr><td>su</td><td>수량</td></tr>
+          <tr><td>writeday</td><td>등록일</td></tr>
+        </table>
+      </td>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">jjim</th></tr>
+          <tr><td>id (PK)</td><td>찜 ID</td></tr>
+          <tr><td>pcode</td><td>상품 코드</td></tr>
+          <tr><td>userid</td><td>사용자 ID</td></tr>
+          <tr><td>writeday</td><td>등록일</td></tr>
+        </table>
+      </td>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">jung</th></tr>
+          <tr><td>id (PK)</td><td>중분류 ID</td></tr>
+          <tr><td>name</td><td>중분류명</td></tr>
+          <tr><td>code</td><td>코드</td></tr>
+          <tr><td>daecode</td><td>대분류 코드</td></tr>
+        </table>
+        <br>
+        <table border="1">
+          <tr><th colspan="2">so</th></tr>
+          <tr><td>id (PK)</td><td>소분류 ID</td></tr>
+          <tr><td>name</td><td>소분류명</td></tr>
+          <tr><td>code</td><td>코드</td></tr>
+          <tr><td>daejung</td><td>중분류 코드</td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">gumae</th></tr>
+          <tr><td>id (PK)</td><td>주문 ID</td></tr>
+          <tr><td>userid</td><td>사용자 ID</td></tr>
+          <tr><td>baeId</td><td>배송 ID</td></tr>
+          <tr><td>pcode</td><td>상품 코드</td></tr>
+          <tr><td>su</td><td>수량</td></tr>
+          <tr><td>useJuk</td><td>사용 적립금</td></tr>
+          <tr><td>jumuncode</td><td>주문 코드</td></tr>
+          <tr><td>state</td><td>상태</td></tr>
+          <tr><td>writeday</td><td>주문일</td></tr>
+          <tr><td>sudan</td><td>결제 수단</td></tr>
+        </table>
+      </td>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">review</th></tr>
+          <tr><td>id (PK)</td><td>리뷰 ID</td></tr>
+          <tr><td>userid</td><td>사용자 ID</td></tr>
+          <tr><td>pcode</td><td>상품 코드</td></tr>
+          <tr><td>star</td><td>평점</td></tr>
+          <tr><td>title</td><td>제목</td></tr>
+          <tr><td>content</td><td>내용</td></tr>
+          <tr><td>writeday</td><td>작성일</td></tr>
+        </table>
+      </td>
+      <td align="center">
+        <table border="1">
+          <tr><th colspan="2">baesong</th></tr>
+          <tr><td>id (PK)</td><td>배송 ID</td></tr>
+          <tr><td>zip</td><td>우편번호</td></tr>
+          <tr><td>juso</td><td>주소</td></tr>
+          <tr><td>phone</td><td>연락처</td></tr>
+          <tr><td>name</td><td>수령인</td></tr>
+          <tr><td>userid</td><td>사용자 ID</td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </div>
 
 ### 📦 계층형 카테고리 시스템
